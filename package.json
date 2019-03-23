@@ -1,0 +1,15 @@
+{
+    "name": "twitter-extract-widgets",
+    "version": "1.1.0",
+    "description": "Extract information from Twitter Widgets",
+    "license": "MIT",
+    "repository": "twitter-extract-widgets",
+    "main": "index.js",
+    "keywords": [
+        "twitter",
+        "widget",
+        "extract",
+        "zuberek",
+        "package"
+    ]
+}
