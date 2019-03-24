@@ -4,12 +4,11 @@
     "description": "Extract information from Twitter Widgets",
     "license": "MIT",
     "repository": "twitter-extract-widgets",
-    "main": "index.js",
+    "main": "./src/main.js",
     "keywords": [
-        "twitter",
-        "widget",
-        "extract",
-        "zuberek",
-        "package"
-    ]
+        "twitter", "widget", "extract", "zuberek", "scraping"
+    ],
+    "dependencies": {
+        "cheerio": "^1.0.0-rc.2"
+    }
 }
