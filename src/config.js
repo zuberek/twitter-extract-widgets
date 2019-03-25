@@ -1,16 +1,21 @@
 const BASE_URL = 'https://syndication.twitter.com/timeline/';
 const BASE_PARAMS = '?callback=__twttrf.callback&dnt=false&suppress_response_codes=true&rnd=' + Math.random();
 
-function setConfig(cfg){
+function getConfig(cfg){
     var config = {};
     config.showAuthor = (cfg.showAuthor) ? cfg.showAuthor : true;
     config.showRetwitts = (cfg.showRetwitts) ? cfg.showRetwitts : true;
     config.showMedia = (cfg.showMedia) ? cfg.showMedia : true;
     config.noOfTwitts = (cfg.noOfTwitts) ? cfg.noOfTwitts : 20;
-    if(cfg.profile) config.url = profileUrl(cfg.profile);
-    if(cfg.likes) config.url = likesUrl(cfg.profile);
-    if(cfg.list) config.url = listUrl(cfg.list.profile, cfg.list.list);
-    return config
+    return config   
+}
+
+function getUrl(cfg){
+    var url = '';
+    if(cfg.profile) url = profileUrl(cfg.profile);
+    if(cfg.likes) url = likesUrl(cfg.profile);
+    if(cfg.list) url = listUrl(cfg.list.profile, cfg.list.list);
+    return url
 }
 
 function profileUrl(profile){
@@ -24,5 +29,6 @@ function listUrl(profile, list){
 } 
 
 module.exports = {
-    setConfig,
+    getConfig,
+    getUrl,
 }

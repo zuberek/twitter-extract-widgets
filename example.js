@@ -1,21 +1,12 @@
 const extract = require('./src/main');
 
 // minimal config
-var config = {
-    profile: 'BarackObama',
-}
-
-extract(config)
-    .then(function (twitts){
-        console.log(twitts);
-    })
-    .catch(function (err){
-        console.log(err);
-    });
+var config = { profiles: ['BarackObama'] }
+extract(config).then(twitts => console.log(twitts))
 
 // options
 config = {
-    profile: 'BarackObama',
+    profiles: ['BarackObama', 'realDonaldTrump', 'HillaryClinton'], // twitter user name
     showAuthor: true,
     showRetwitts: false,
     showMedia: true,

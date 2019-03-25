@@ -16,24 +16,15 @@ $ npm install twitter-extract-widgets
 const extract = require("twitter-extract-widgets");
 
 // minimal config
-var config = {
-    profile: 'BarackObama',
-}
-
-extract(config)
-    .then(function (twitts){
-        console.log(twitts);
-    })
-    .catch(function (err){
-        console.log(err);
-    });
+var config = { profiles: ['BarackObama'] }
+extract(config).then(twitts => console.log(twitts))
 ```
 
 ## Configuration
 
 ```js
 config = {
-    profile: 'BarackObama',
+    profiles: ['BarackObama', 'realDonaldTrump', 'HillaryClinton'], // twitter user name
     showAuthor: true,
     showRetwitts: false,
     showMedia: true,
@@ -41,19 +32,19 @@ config = {
 }
 
 // return format
-[{ isRetwitt: false,
-    id: '1098659030204116992',
-    body:
-     'It’s up to all of us as citizens to make sure that the rules of democracy are fair—everywhere—because the next decade of our nation\'s progress is on the line. Join me and @allontheline in the fight against gerrymandering: http://allontheline.org .',
-    time: 'Feb 21, 2019',
-    timestamp: '2019-02-21T19:01:39+0000',
-    link: 'https://twitter.com/BarackObama/status/1098659030204116992',
-    author:
-     { name: 'Barack Obama',
-       username: '@BarackObama',
-       link: 'https://twitter.com/BarackObama',
-       img:
-        'https://pbs.twimg.com/profile_images/822547732376207360/5g0FC8XX_bigger.jpg' },
-    media:
-     [ 'https://pbs.twimg.com/media/Dz8fnh5WwAY4WB1?format=jpg&name=large' ] }]
+{ BarackObama:
+    [   {   isRetwitt: false,
+            id: '1098659030204116992',
+            body:
+            'It’s up to all of us as citizens to make sure that the rules of democracy are fair—everywhere—because the next decade of our nation\'s progress is on the line. Join me and @allontheline in the fight against gerrymandering: http://allontheline.org .',
+            time: 'Feb 21, 2019',
+            timestamp: '2019-02-21T19:01:39+0000',
+            link: 'https://twitter.com/BarackObama/status/1098659030204116992',
+            author:
+                {   name: 'Barack Obama',
+                    username: '@BarackObama',
+                    link: 'https://twitter.com/BarackObama',
+                    img: 'https://pbs.twimg.com/profile_images/822547732376207360/5g0FC8XX_bigger.jpg' },
+            media: [ 'https://pbs.twimg.com/media/Dz8fnh5WwAY4WB1?format=jpg&name=large' ] },
+        {...}   ]   }
 ```
