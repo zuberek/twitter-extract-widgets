@@ -14,19 +14,14 @@ module.exports = function extract(userConfig){
                 reject('Invalid configuration!');
             }
 
-            console.log(appConfig);
-            
-            
             var fetcher = new Fetcher(appConfig);
             
             var twitts = [];
             fetcher.fetch(twitts)
                 .then(function(twitts) {
-                    console.log('finished ' + profile);
-                    
                     allTwitts[profile] = twitts.slice(0, appConfig.noOfTwitts);
                     
-                    if(checkIfFinished(userConfig, allTwitts)) {console.log('FINISHED!'); resolve(allTwitts);}
+                    if(checkIfFinished(userConfig, allTwitts)) resolve(allTwitts);
                 });
             });    
       });   
@@ -35,10 +30,7 @@ module.exports = function extract(userConfig){
 function checkIfFinished(userConfig, allTwitts) {
     var isFinished = true
     userConfig.profiles.forEach(profile => {
-        console.log('checking' + profile);
-        
-        if(!allTwitts[profile]) {console.log('missing ' + profile); isFinished = false;}
-        // if(allTwitts[profile].length != userConfig.noOfTwitts) return false;
+        if(!allTwitts[profile]) isFinished = false;
     });
     return isFinished;
 }

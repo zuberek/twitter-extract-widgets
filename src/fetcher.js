@@ -41,7 +41,6 @@ Fetcher.prototype.fetch = function (twitts) {
     
     return new Promise(function(resolve, reject) {
         // base case
-        // console.log('\started step:\t' + twitts.length + ' twitts');
         if (twitts.length >= self.noOfTwitts) {
             resolve(twitts);
             return;
@@ -56,7 +55,6 @@ Fetcher.prototype.fetch = function (twitts) {
                 self.url = updateUrl(self.url, request.headers.minPosition);
                 self.fetch(twitts)
                     .then(function (recursiveTwitts){
-                        // console.log('Finished step:\t' + twitts.length + ' twitts');
                         resolve(recursiveTwitts)
                     });
             })
