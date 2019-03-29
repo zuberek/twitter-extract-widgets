@@ -7,12 +7,11 @@
     "homepage": "https://github.com/zuberek/twitter-extract-widgets#readme",
     "scripts": {
         "serve": "node ./example.js",
-        "dev": "watchify ./src/main.js -o ./dist/bundle.js",
-        "build": "browserify ./src/main.js -o ./dist/bundle.js",
+        "build": "webpack",
         "lint": "eslint ./src --fix"
     },
-    "main": "./src/main.js",
-    "browser": "./dist/bundle.js",
+    "main": "./dist/lib.node.js",
+    "browser": "./dist/lib.js",
     "keywords": [
         "twitter",
         "widget",
@@ -29,6 +28,9 @@
         "eslint-plugin-import": "^2.16.0",
         "eslint-plugin-node": "^8.0.1",
         "eslint-plugin-promise": "^4.0.1",
-        "eslint-plugin-standard": "^4.0.0"
+        "eslint-plugin-standard": "^4.0.0",
+        "webpack": "^4.29.6",
+        "webpack-cli": "^3.3.0",
+        "webpack-node-externals": "^1.7.2"
     }
 }
