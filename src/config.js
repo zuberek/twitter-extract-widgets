@@ -4,9 +4,9 @@ const BASE_PARAMS = '?callback=__twttr.callback&dnt=false&suppress_response_code
 function getConfig(cfg){
     var config = {};
     config.showAuthor = (cfg.showAuthor) ? cfg.showAuthor : true;
-    config.showRetwitts = (cfg.showRetwitts) ? cfg.showRetwitts : true;
+    config.showRetweets = (cfg.showRetweets) ? cfg.showRetweets : true;
     config.showMedia = (cfg.showMedia) ? cfg.showMedia : true;
-    config.noOfTwitts = (cfg.noOfTwitts) ? cfg.noOfTwitts : 20;
+    config.noOfTweets = (cfg.noOfTweets) ? cfg.noOfTweets : 20;
     config.browser = (typeof window !== 'undefined');
     return config
 }

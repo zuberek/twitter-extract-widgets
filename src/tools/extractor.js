@@ -2,56 +2,56 @@ const cheerio = require('cheerio');
 
 var Extractor = function(config) {
     this.showAuthor = config.showAuthor;
-    this.showRetwitts = config.showRetwitts;
+    this.showRetweets = config.showRetweets;
     this.showMedia = config.showMedia;
 }
 
 Extractor.prototype.extract = function(body) {
     const $ = cheerio.load(body);
-    var twitts = [];
+    var tweets = [];
     var self = this;
 
     $.root().find('.timeline-Tweet').map(function (i, el) {
-        // $(this) === el (single raw twitt)
+        // $(this) === el (single raw tweet)
 
-        var twitt = {};
+        var tweet = {};
         
-        // Check if is retwitt
+        // Check if is retweet
         if ($(this).find('.timeline-Tweet-retweetCredit').length > 0) {
-            twitt.isRetwitt = true;
+            tweet.isRetweet = true;
         } else {
-            twitt.isRetwitt = false;
+            tweet.isRetweet = false;
         }
 
-        if (!twitt.isRetwitt || twitt.isRetwitt && self.showRetwitts) {
-            twitt.id = $(this).attr('data-tweet-id');
-            twitt.body = $(this).find('.timeline-Tweet-text').text();
-            twitt.time = $(this).find('.dt-updated').text().slice(6);
-            twitt.timestamp = $(this).find('.dt-updated').attr('datetime');
-            twitt.link = $(this).find('.timeline-Tweet-timestamp').attr('href');
+        if (!tweet.isRetweet || tweet.isRetweet && self.showRetweets) {
+            tweet.id = $(this).attr('data-tweet-id');
+            tweet.body = $(this).find('.timeline-Tweet-text').text();
+            tweet.time = $(this).find('.dt-updated').text().slice(6);
+            tweet.timestamp = $(this).find('.dt-updated').attr('datetime');
+            tweet.link = $(this).find('.timeline-Tweet-timestamp').attr('href');
             if (self.showAuthor) {
                 var rawAuthor = $(this).find('.timeline-Tweet-author');
-                twitt.author = {};
-                twitt.author.name = rawAuthor.find('.TweetAuthor-name').text();
-                twitt.author.username = rawAuthor.find('.TweetAuthor-screenName ').text();
-                twitt.author.link = rawAuthor.find('.TweetAuthor-link').attr('href');                    
-                twitt.author.img = rawAuthor.find('.Avatar').attr('data-src-2x');
+                tweet.author = {};
+                tweet.author.name = rawAuthor.find('.TweetAuthor-name').text();
+                tweet.author.username = rawAuthor.find('.TweetAuthor-screenName ').text();
+                tweet.author.link = rawAuthor.find('.TweetAuthor-link').attr('href');                    
+                tweet.author.img = rawAuthor.find('.Avatar').attr('data-src-2x');
             }
             if (self.showMedia) {
                 var rawMedia = $(this).find('.timeline-Tweet-media');
                 if(rawMedia.hasClass('timeline-Tweet-media')) {
-                    twitt.media = [];                        
+                    tweet.media = [];                        
                     rawMedia.find('img').map(function (i, el){
                         if($(this).attr('data-image'))               
-                            twitt.media.push($(this).attr('data-image') + '?format=jpg&name=large');
+                            tweet.media.push($(this).attr('data-image') + '?format=jpg&name=large');
                     });
-                    if(twitt.media.length == 0) delete twitt.media;
+                    if(tweet.media.length == 0) delete tweet.media;
                 }
             }
         }
-        twitts.push(twitt);
+        tweets.push(tweet);
     });    
-    return twitts;
+    return tweets;
 }
 
 module.exports = Extractor;

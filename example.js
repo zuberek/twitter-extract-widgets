@@ -8,14 +8,14 @@ extract(config).then(tweets => console.log(tweets))
 // config = {
 //     profiles: ['BarackObama', 'realDonaldTrump', 'HillaryClinton'], // twitter user name
 //     showAuthor: true,
-//     showRetwitts: false,
+//     showRetweets: false,
 //     showMedia: true,
-//     noOfTwitts: 26,
+//     noOftweets: 26,
 // }
 
 // extract(config)
-//     .then(function (twitts){
-//         console.log(twitts);
+//     .then(function (tweets){
+//         console.log(tweets);
 //     })
 //     .catch(function (err){
 //         console.log(err);

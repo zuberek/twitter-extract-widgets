@@ -3,7 +3,7 @@ const https = require('./fetchers/https')
 const scriptTag = require('./fetchers/scriptTag')
 
 var Scraper = function(config) {
-    this.noOfTwitts = config.noOfTwitts;
+    this.noOfTweets = config.noOfTweets;
     this.url = config.url;
     this.extractor = new Extractor(config);
 
@@ -19,7 +19,7 @@ Scraper.prototype.getTweets = function(tweets) {
     
     return new Promise(function(resolve, reject) {
         // base case
-        if (tweets.length >= self.noOfTwitts) {
+        if (tweets.length >= self.noOfTweets) {
             resolve(tweets);
             return;
         }
@@ -27,7 +27,7 @@ Scraper.prototype.getTweets = function(tweets) {
         self.fetch(self.url)
             .then(function (request){
                 var extracted = self.extractor.extract(request.body);
-                if(extracted.length === 0) {resolve(tweets); return;} // BREAK IF NO MORE TWITTS!!!
+                if(extracted.length === 0) {resolve(tweets); return;} // BREAK IF NO MORE TWEETS!!!
                 tweets = tweets.concat(extracted);
 
                 self.url = updateUrl(self.url, request.headers.minPosition);

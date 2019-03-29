@@ -3,7 +3,7 @@ const config = require('./config');
 
 function extract(userConfig){
     return new Promise(function(resolve, reject) {
-        var allTwitts = {};
+        var alltweets = {};
         
         userConfig.profiles.forEach(profile => {
             var appConfig = config.getConfig(userConfig);
@@ -14,21 +14,21 @@ function extract(userConfig){
 
             var scraper = new Scraper(appConfig);
             
-            var twitts = [];
-            scraper.getTweets(twitts)
-                .then(twitts => {
-                    allTwitts[profile] = twitts.slice(0, appConfig.noOfTwitts);
+            var tweets = [];
+            scraper.getTweets(tweets)
+                .then(tweets => {
+                    alltweets[profile] = tweets.slice(0, appConfig.noOfTweets);
                     
-                    if(checkIfFinished(userConfig, allTwitts)) resolve(allTwitts);
+                    if(checkIfFinished(userConfig, alltweets)) resolve(alltweets);
                 });
             });    
       });   
 }
 
-function checkIfFinished(userConfig, allTwitts) {
+function checkIfFinished(userConfig, alltweets) {
     var isFinished = true
     userConfig.profiles.forEach(profile => {
-        if(!allTwitts[profile]) isFinished = false;
+        if(!alltweets[profile]) isFinished = false;
     });
     return isFinished;
 }
