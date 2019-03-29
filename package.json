@@ -6,7 +6,7 @@
     "repository": "https://github.com/zuberek/twitter-extract-widgets",
     "homepage": "https://github.com/zuberek/twitter-extract-widgets#readme",
     "scripts": {
-        "serve": "node ./example.js",
+        "serve": "node ./example/example.js",
         "build": "webpack",
         "lint": "eslint ./src --fix"
     },
