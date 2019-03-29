@@ -1,22 +1,22 @@
-const extract = require('./src/main');
+const extract = require('./src/server');
 
 // minimal config
 var config = { profiles: ['BarackObama'] }
-extract(config).then(twitts => console.log(twitts))
+extract(config).then(tweets => console.log(tweets))
 
 // options
-config = {
-    profiles: ['BarackObama', 'realDonaldTrump', 'HillaryClinton'], // twitter user name
-    showAuthor: true,
-    showRetwitts: false,
-    showMedia: true,
-    noOfTwitts: 26,
-}
+// config = {
+//     profiles: ['BarackObama', 'realDonaldTrump', 'HillaryClinton'], // twitter user name
+//     showAuthor: true,
+//     showRetwitts: false,
+//     showMedia: true,
+//     noOfTwitts: 26,
+// }
 
-extract(config)
-    .then(function (twitts){
-        console.log(twitts);
-    })
-    .catch(function (err){
-        console.log(err);
-    });
+// extract(config)
+//     .then(function (twitts){
+//         console.log(twitts);
+//     })
+//     .catch(function (err){
+//         console.log(err);
+//     });

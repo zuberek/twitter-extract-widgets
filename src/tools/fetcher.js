@@ -1,5 +1,5 @@
 const https = require('https');
-const Extractor = require('./extractor');
+const Extractor = require('../extractor');
 
 var Fetcher = function(config) {
     this.noOfTwitts = config.noOfTwitts;

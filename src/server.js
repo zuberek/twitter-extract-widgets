@@ -1,4 +1,4 @@
-const Fetcher = require('./fetcher');
+const Fetcher = require('./tools/fetchers/https');
 const config = require('./config');
 
 module.exports = function extract(userConfig){

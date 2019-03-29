@@ -1,0 +1,25 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Twitter Extract Widgets</title>
+    <meta name="author" content="Jan Dabrowski" />
+    <meta name="keywords" content="Twitter Extract Widgets" />
+    <meta name="description" content="Extract Information From Twitter Widgets"/>
+  </head>
+  <body>
+    Open your console
+    <script type="text/javascript" src="./src/bundle.js"></script>
+    <script type="text/javascript">
+      var config = {
+        url: 'https://syndication.twitter.com/timeline/profile?callback=__twttrf.callback&dnt=false&screen_name=BarackObama&suppress_response_codes=true&rnd=' + Math.random(),
+        noOfTwitts: 20,
+        showAuthor: true,
+        showRetwitts: true,
+        showMedia: true,
+      }
+      extract(config);   
+    </script>
+  </body>
+</html>
