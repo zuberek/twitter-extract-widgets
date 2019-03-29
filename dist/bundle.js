@@ -30141,244 +30141,248 @@ Mixin.prototype._getOverriddenMethods = function () {
 
 
 },{}],341:[function(require,module,exports){
-const BASE_URL = 'https://syndication.twitter.com/timeline/';
-const BASE_PARAMS = '?callback=__twttr.callback&dnt=false&suppress_response_codes=true&rnd=' + Math.random();
+const BASE_URL = 'https://syndication.twitter.com/timeline/'
+const BASE_PARAMS = '?callback=__twttr.callback&dnt=false&suppress_response_codes=true&rnd=' + Math.random()
 
-function getConfig(cfg){
-    var config = {};
-    config.showAuthor = (cfg.showAuthor) ? cfg.showAuthor : true;
-    config.showRetweets = (cfg.showRetweets) ? cfg.showRetweets : true;
-    config.showMedia = (cfg.showMedia) ? cfg.showMedia : true;
-    config.noOfTweets = (cfg.noOfTweets) ? cfg.noOfTweets : 20;
-    config.browser = (typeof window !== 'undefined');
-    return config
+function getConfig (cfg) {
+  var config = {}
+  config.showAuthor = (cfg.showAuthor) ? cfg.showAuthor : true
+  config.showRetweets = (cfg.showRetweets) ? cfg.showRetweets : true
+  config.showMedia = (cfg.showMedia) ? cfg.showMedia : true
+  config.noOfTweets = (cfg.noOfTweets) ? cfg.noOfTweets : 20
+  config.browser = (typeof window !== 'undefined')
+  return config
 }
 
-function getUrl(cfg){
-    var url = '';
-    if(cfg.profile) url = profileUrl(cfg.profile);
-    if(cfg.likes) url = likesUrl(cfg.profile);
-    if(cfg.list) url = listUrl(cfg.list.profile, cfg.list.list);
-    return url
+function getUrl (cfg) {
+  var url = ''
+  if (cfg.profile) url = profileUrl(cfg.profile)
+  if (cfg.likes) url = likesUrl(cfg.profile)
+  if (cfg.list) url = listUrl(cfg.list.profile, cfg.list.list)
+  return url
 }
 
-function profileUrl(profile){
-    return BASE_URL + 'profile' + BASE_PARAMS + '&screen_name=' + profile
-} 
-function likesUrl(profile){
-    return BASE_URL + 'likes' + BASE_PARAMS + '&screen_name=' + profile
-} 
-function listUrl(profile, list){
-    return BASE_URL + 'list' + BASE_PARAMS + '&screen_name=' + profile + '&list_slug=' + list
-} 
+function profileUrl (profile) {
+  return BASE_URL + 'profile' + BASE_PARAMS + '&screen_name=' + profile
+}
+function likesUrl (profile) {
+  return BASE_URL + 'likes' + BASE_PARAMS + '&screen_name=' + profile
+}
+function listUrl (profile, list) {
+  return BASE_URL + 'list' + BASE_PARAMS + '&screen_name=' + profile + '&list_slug=' + list
+}
 
 module.exports = {
-    getConfig,
-    getUrl,
+  getConfig,
+  getUrl
 }
+
 },{}],342:[function(require,module,exports){
-const Scraper = require('./tools/scraper');
-const config = require('./config');
+const Scraper = require('./tools/scraper')
+const config = require('./config')
 
-function extract(userConfig){
-    return new Promise(function(resolve, reject) {
-        var alltweets = {};
-        
-        userConfig.profiles.forEach(profile => {
-            var appConfig = config.getConfig(userConfig);
-            appConfig.profile = profile;
-            appConfig.url = config.getUrl(appConfig);
+function extract (userConfig) {
+  return new Promise(function (resolve, reject) {
+    var alltweets = {}
 
-            if(!appConfig.url) reject('Invalid configuration!');
+    userConfig.profiles.forEach(profile => {
+      var appConfig = config.getConfig(userConfig)
+      appConfig.profile = profile
+      appConfig.url = config.getUrl(appConfig)
 
-            var scraper = new Scraper(appConfig);
-            
-            var tweets = [];
-            scraper.getTweets(tweets)
-                .then(tweets => {
-                    alltweets[profile] = tweets.slice(0, appConfig.noOfTweets);
-                    
-                    if(checkIfFinished(userConfig, alltweets)) resolve(alltweets);
-                });
-            });    
-      });   
+      if (!appConfig.url) reject(new Error('Invalid configuration!'))
+
+      var scraper = new Scraper(appConfig)
+
+      var tweets = []
+      scraper.getTweets(tweets)
+        .then(tweets => {
+          alltweets[profile] = tweets.slice(0, appConfig.noOfTweets)
+
+          if (checkIfFinished(userConfig, alltweets)) resolve(alltweets)
+        })
+    })
+  })
 }
 
-function checkIfFinished(userConfig, alltweets) {
-    var isFinished = true
-    userConfig.profiles.forEach(profile => {
-        if(!alltweets[profile]) isFinished = false;
-    });
-    return isFinished;
+function checkIfFinished (userConfig, alltweets) {
+  var isFinished = true
+  userConfig.profiles.forEach(profile => {
+    if (!alltweets[profile]) isFinished = false
+  })
+  return isFinished
 }
 
 // if run in browser register the method for use
-if((typeof window !== 'undefined')) window.extract = extract;
-module.exports = extract;
+if ((typeof window !== 'undefined')) window.extract = extract
+module.exports = extract
+
 },{"./config":341,"./tools/scraper":346}],343:[function(require,module,exports){
-const cheerio = require('cheerio');
+const cheerio = require('cheerio')
 
-var Extractor = function(config) {
-    this.showAuthor = config.showAuthor;
-    this.showRetweets = config.showRetweets;
-    this.showMedia = config.showMedia;
+var Extractor = function (config) {
+  this.showAuthor = config.showAuthor
+  this.showRetweets = config.showRetweets
+  this.showMedia = config.showMedia
 }
 
-Extractor.prototype.extract = function(body) {
-    const $ = cheerio.load(body);
-    var tweets = [];
-    var self = this;
+Extractor.prototype.extract = function (body) {
+  const $ = cheerio.load(body)
+  var tweets = []
+  var self = this
 
-    $.root().find('.timeline-Tweet').map(function (i, el) {
-        // $(this) === el (single raw tweet)
+  $.root().find('.timeline-Tweet').map(function (i, el) {
+    // $(this) === el (single raw tweet)
 
-        var tweet = {};
-        
-        // Check if is retweet
-        if ($(this).find('.timeline-Tweet-retweetCredit').length > 0) {
-            tweet.isRetweet = true;
-        } else {
-            tweet.isRetweet = false;
+    var tweet = {}
+
+    // Check if is retweet
+    if ($(this).find('.timeline-Tweet-retweetCredit').length > 0) {
+      tweet.isRetweet = true
+    } else {
+      tweet.isRetweet = false
+    }
+
+    if (!tweet.isRetweet || (tweet.isRetweet && self.showRetweets)) {
+      tweet.id = $(this).attr('data-tweet-id')
+      tweet.body = $(this).find('.timeline-Tweet-text').text()
+      tweet.time = $(this).find('.dt-updated').text().slice(6)
+      tweet.timestamp = $(this).find('.dt-updated').attr('datetime')
+      tweet.link = $(this).find('.timeline-Tweet-timestamp').attr('href')
+      if (self.showAuthor) {
+        var rawAuthor = $(this).find('.timeline-Tweet-author')
+        tweet.author = {}
+        tweet.author.name = rawAuthor.find('.TweetAuthor-name').text()
+        tweet.author.username = rawAuthor.find('.TweetAuthor-screenName ').text()
+        tweet.author.link = rawAuthor.find('.TweetAuthor-link').attr('href')
+        tweet.author.img = rawAuthor.find('.Avatar').attr('data-src-2x')
+      }
+      if (self.showMedia) {
+        var rawMedia = $(this).find('.timeline-Tweet-media')
+        if (rawMedia.hasClass('timeline-Tweet-media')) {
+          tweet.media = []
+          rawMedia.find('img').map(function (i, el) {
+            if ($(this).attr('data-image')) { tweet.media.push($(this).attr('data-image') + '?format=jpg&name=large') }
+          })
+          if (tweet.media.length === 0) delete tweet.media
         }
-
-        if (!tweet.isRetweet || tweet.isRetweet && self.showRetweets) {
-            tweet.id = $(this).attr('data-tweet-id');
-            tweet.body = $(this).find('.timeline-Tweet-text').text();
-            tweet.time = $(this).find('.dt-updated').text().slice(6);
-            tweet.timestamp = $(this).find('.dt-updated').attr('datetime');
-            tweet.link = $(this).find('.timeline-Tweet-timestamp').attr('href');
-            if (self.showAuthor) {
-                var rawAuthor = $(this).find('.timeline-Tweet-author');
-                tweet.author = {};
-                tweet.author.name = rawAuthor.find('.TweetAuthor-name').text();
-                tweet.author.username = rawAuthor.find('.TweetAuthor-screenName ').text();
-                tweet.author.link = rawAuthor.find('.TweetAuthor-link').attr('href');                    
-                tweet.author.img = rawAuthor.find('.Avatar').attr('data-src-2x');
-            }
-            if (self.showMedia) {
-                var rawMedia = $(this).find('.timeline-Tweet-media');
-                if(rawMedia.hasClass('timeline-Tweet-media')) {
-                    tweet.media = [];                        
-                    rawMedia.find('img').map(function (i, el){
-                        if($(this).attr('data-image'))               
-                            tweet.media.push($(this).attr('data-image') + '?format=jpg&name=large');
-                    });
-                    if(tweet.media.length == 0) delete tweet.media;
-                }
-            }
-        }
-        tweets.push(tweet);
-    });    
-    return tweets;
+      }
+    }
+    tweets.push(tweet)
+  })
+  return tweets
 }
 
-module.exports = Extractor;
+module.exports = Extractor
+
 },{"cheerio":48}],344:[function(require,module,exports){
-const https = require('https');
+const https = require('https')
 
 function fetch (url) {
-    return new Promise(function(resolve, reject) {
-        var req = https.get(url, function(res) {
-            if (res.statusCode < 200 || res.statusCode >= 300) {
-                return reject(new Error('statusCode=' + res.statusCode));
-            }
-            res.setEncoding("utf8");
-            let body = "";
-            res.on('data', function(chunk) {
-                body += chunk;
-            });
-            res.on('end', function() {
-                try {
-                    body = JSON.parse(body.slice(21, body.length-2));                    
-                } catch(e) {
-                    reject(e);
-                }
-                resolve(body);
-            });
-        });
-        // reject on request error
-        req.on('error', function(err) {
-            reject(err);
-        });
-        // IMPORTANT
-        req.end();
-    });
+  return new Promise(function (resolve, reject) {
+    var req = https.get(url, function (res) {
+      if (res.statusCode < 200 || res.statusCode >= 300) {
+        return reject(new Error('statusCode=' + res.statusCode))
+      }
+      res.setEncoding('utf8')
+      let body = ''
+      res.on('data', function (chunk) {
+        body += chunk
+      })
+      res.on('end', function () {
+        try {
+          body = JSON.parse(body.slice(21, body.length - 2))
+        } catch (e) {
+          reject(e)
+        }
+        resolve(body)
+      })
+    })
+    // reject on request error
+    req.on('error', function (err) {
+      reject(err)
+    })
+    // IMPORTANT
+    req.end()
+  })
 }
 
-module.exports = fetch;
+module.exports = fetch
+
 },{"https":7}],345:[function(require,module,exports){
-var result = {};
+var result = {}
 
 var scriptFetcher = {
-    fetch: function(url) {
-        return new Promise(function(resolve, reject) {
-            var head = document.getElementsByTagName('head')[0];
-            script = document.createElement('script');
-            script.type = 'text/javascript';
-            script.src = url;
-            script.addEventListener('load', () => {
-                resolve(result);
-            });
-            head.appendChild(script);
-        });
-    },
-    callback: function(data) {
-        result = data;
-    }
+  fetch: function (url) {
+    return new Promise(function (resolve, reject) {
+      var head = document.getElementsByTagName('head')[0]
+      var script = document.createElement('script')
+      script.type = 'text/javascript'
+      script.src = url
+      script.addEventListener('load', () => {
+        resolve(result)
+      })
+      head.appendChild(script)
+    })
+  },
+  callback: function (data) {
+    result = data
+  }
 }
 
-module.exports = scriptFetcher;
+module.exports = scriptFetcher
+
 },{}],346:[function(require,module,exports){
-const Extractor = require('./extractor');
+const Extractor = require('./extractor')
 const https = require('./fetchers/https')
 const scriptTag = require('./fetchers/scriptTag')
 
-var Scraper = function(config) {
-    this.noOfTweets = config.noOfTweets;
-    this.url = config.url;
-    this.extractor = new Extractor(config);
+var Scraper = function (config) {
+  this.noOfTweets = config.noOfTweets
+  this.url = config.url
+  this.extractor = new Extractor(config)
 
-    if(!config.browser) this.fetch = https;
-    else {
-        this.fetch = scriptTag.fetch;
-        window.__twttr = scriptTag;
+  if (!config.browser) this.fetch = https
+  else {
+    this.fetch = scriptTag.fetch
+    window.__twttr = scriptTag
+  }
+}
+
+Scraper.prototype.getTweets = function (tweets) {
+  var self = this
+
+  return new Promise(function (resolve, reject) {
+    // base case
+    if (tweets.length >= self.noOfTweets) {
+      resolve(tweets)
+      return
     }
+
+    self.fetch(self.url)
+      .then(function (request) {
+        var extracted = self.extractor.extract(request.body)
+        if (extracted.length === 0) { resolve(tweets); return } // BREAK IF NO MORE TWEETS!!!
+        tweets = tweets.concat(extracted)
+
+        self.url = updateUrl(self.url, request.headers.minPosition)
+        self.getTweets(tweets)
+          .then(function (recursiveTweets) {
+            resolve(recursiveTweets)
+          })
+      })
+  })
 }
 
-Scraper.prototype.getTweets = function(tweets) {
-    var self = this;
-    
-    return new Promise(function(resolve, reject) {
-        // base case
-        if (tweets.length >= self.noOfTweets) {
-            resolve(tweets);
-            return;
-        }
-            
-        self.fetch(self.url)
-            .then(function (request){
-                var extracted = self.extractor.extract(request.body);
-                if(extracted.length === 0) {resolve(tweets); return;} // BREAK IF NO MORE TWEETS!!!
-                tweets = tweets.concat(extracted);
+function updateUrl (url, position) {
+  var splitted = url.split('&')
 
-                self.url = updateUrl(self.url, request.headers.minPosition);
-                self.getTweets(tweets)
-                    .then(function (recursiveTweets){
-                        resolve(recursiveTweets)
-                    });
-            })
-    });
+  if (splitted[splitted.length - 1].slice(0, 12) === 'max_position') { url = url.slice(0, url.length - (splitted[splitted.length - 1].length + 1)) }
+
+  url += '&max_position=' + position
+  return url
 }
 
-function updateUrl(url, position) {
-    var splitted = url.split('&');
+module.exports = Scraper
 
-    if(splitted[splitted.length-1].slice(0,12) === 'max_position')
-        url = url.slice(0, url.length - (splitted[splitted.length-1].length + 1));
-
-    url += '&max_position=' + position;    
-    return url;                
-}
-
-module.exports = Scraper;
 },{"./extractor":343,"./fetchers/https":344,"./fetchers/scriptTag":345}]},{},[342]);

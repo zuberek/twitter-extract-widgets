@@ -1,4 +1,4 @@
-const extract = require('./src/main');
+const extract = require('./src/main')
 
 // minimal config
 var config = { profiles: ['BarackObama'] }
