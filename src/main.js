@@ -1,7 +1,7 @@
-const Fetcher = require('./tools/fetchers/https');
+const Scraper = require('./tools/scraper');
 const config = require('./config');
 
-module.exports = function extract(userConfig){
+function extract(userConfig){
     return new Promise(function(resolve, reject) {
         var allTwitts = {};
         
@@ -10,15 +10,13 @@ module.exports = function extract(userConfig){
             appConfig.profile = profile;
             appConfig.url = config.getUrl(appConfig);
 
-            if(!appConfig.url) {
-                reject('Invalid configuration!');
-            }
+            if(!appConfig.url) reject('Invalid configuration!');
 
-            var fetcher = new Fetcher(appConfig);
+            var scraper = new Scraper(appConfig);
             
             var twitts = [];
-            fetcher.fetch(twitts)
-                .then(function(twitts) {
+            scraper.getTweets(twitts)
+                .then(twitts => {
                     allTwitts[profile] = twitts.slice(0, appConfig.noOfTwitts);
                     
                     if(checkIfFinished(userConfig, allTwitts)) resolve(allTwitts);
@@ -35,3 +33,6 @@ function checkIfFinished(userConfig, allTwitts) {
     return isFinished;
 }
 
+// if run in browser register the method for use
+if((typeof window !== 'undefined')) window.extract = extract;
+module.exports = extract;

@@ -5,6 +5,10 @@
     "license": "MIT",
     "repository": "https://github.com/zuberek/twitter-extract-widgets",
     "homepage": "https://github.com/zuberek/twitter-extract-widgets#readme",
+    "scripts": {
+        "build": "browserify ./src/main.js -o ./dist/bundle.js",
+        "serve": "node ./example.js"
+    },
     "main": "./src/main.js",
     "keywords": [
         "twitter",

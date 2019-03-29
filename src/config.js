@@ -1,5 +1,5 @@
 const BASE_URL = 'https://syndication.twitter.com/timeline/';
-const BASE_PARAMS = '?callback=__twttrf.callback&dnt=false&suppress_response_codes=true&rnd=' + Math.random();
+const BASE_PARAMS = '?callback=__twttr.callback&dnt=false&suppress_response_codes=true&rnd=' + Math.random();
 
 function getConfig(cfg){
     var config = {};
@@ -7,7 +7,8 @@ function getConfig(cfg){
     config.showRetwitts = (cfg.showRetwitts) ? cfg.showRetwitts : true;
     config.showMedia = (cfg.showMedia) ? cfg.showMedia : true;
     config.noOfTwitts = (cfg.noOfTwitts) ? cfg.noOfTwitts : 20;
-    return config   
+    config.browser = (typeof window !== 'undefined');
+    return config
 }
 
 function getUrl(cfg){

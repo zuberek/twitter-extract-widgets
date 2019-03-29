@@ -10,16 +10,10 @@
   </head>
   <body>
     Open your console
-    <script type="text/javascript" src="./src/bundle.js"></script>
+    <script type="text/javascript" src="./dist/bundle.js"></script>
     <script type="text/javascript">
-      var config = {
-        url: 'https://syndication.twitter.com/timeline/profile?callback=__twttrf.callback&dnt=false&screen_name=BarackObama&suppress_response_codes=true&rnd=' + Math.random(),
-        noOfTwitts: 20,
-        showAuthor: true,
-        showRetwitts: true,
-        showMedia: true,
-      }
-      extract(config);   
+      var config = { profiles: ['BarackObama'] }
+      extract(config).then(tweets => console.log(tweets))
     </script>
   </body>
 </html>
