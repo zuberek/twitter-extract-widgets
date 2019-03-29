@@ -15,7 +15,6 @@ $ npm install twitter-extract-widgets
 ## Usage
 
 ### Node
-
 ```js
 const extract = require("twitter-extract-widgets");
 
@@ -25,7 +24,6 @@ extract(config).then(twitts => console.log(twitts))
 ```
 
 ### Browser
-
 ```html
 <script type="text/javascript" src="twitter-extract-widgets"></script>
 <script type="text/javascript">

@@ -12,6 +12,7 @@
         "lint": "eslint ./src --fix"
     },
     "main": "./src/main.js",
+    "browser": "./dist/bundle.js",
     "keywords": [
         "twitter",
         "widget",
